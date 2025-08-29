@@ -1,95 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TEM Toolbox</title>
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f8f9fa;
-      color: #333;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TEM Toolbox — Pixel Edition</title>
+<meta name="color-scheme" content="light dark" />
+<style>
+  :root{
+    /* 复古像素调色板（GB风 + 霓虹点缀） */
+    --bg: #e3e7db;         /* 背景米绿 */
+    --grid: #d6dacd;       /* 背景网格线 */
+    --ink: #1b1f22;        /* 墨色文字/描边 */
+    --card: #f8faf2;       /* 卡片底色 */
+    --accent: #2c3e50;     /* 标题深蓝 */
+    --accent-2: #4CAF50;   /* 成功绿 */
+    --accent-3: #ffb300;   /* 金币黄 */
+    --shadow: #9aa190;     /* 阴影灰绿 */
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#111513;
+      --grid:#1a1e1c;
+      --ink:#e7edeb;
+      --card:#171b19;
+      --accent:#b7c7ff;
+      --accent-2:#8be28b;
+      --accent-3:#ffd45a;
+      --shadow:#0b0d0c;
     }
-    header {
-      text-align: center;
-      padding: 2rem 1rem;
-      background: #2c3e50;
-      color: white;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 2rem;
-    }
-    header p {
-      margin: 0.5rem 0 0;
-      font-size: 1rem;
-      opacity: 0.8;
-    }
-    main {
-      max-width: 800px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-      display: grid;
-      gap: 1rem;
-    }
-    .card {
-      background: white;
-      border-radius: 12px;
-      padding: 1.2rem;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-      transition: transform 0.15s ease;
-      text-decoration: none;
-      color: inherit;
-    }
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-    }
-    .card h2 {
-      margin: 0 0 0.5rem;
-      font-size: 1.2rem;
-      color: #2c3e50;
-    }
-    .card p {
-      margin: 0;
-      font-size: 0.9rem;
-      color: #555;
-    }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.8rem;
-      color: #666;
-    }
-  </style>
+  }
+
+  html,body{
+    height:100%;
+  }
+  body{
+    margin:0;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    color:var(--ink);
+    background:
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/24px 24px,
+      linear-gradient(0deg, var(--grid) 1px, transparent 1px) 0 0/24px 24px,
+      var(--bg);
+    image-rendering: pixelated; /* 放大时保持像素感 */
+  }
+
+  /* 顶部像素标题条 */
+  header{
+    padding: 28px 16px;
+    text-align:center;
+  }
+  .title{
+    display:inline-block;
+    background: var(--accent);
+    color: #fff;
+    padding: 10px 16px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    /* 像素描边：四向阴影 */
+    box-shadow:
+      0 0 0 2px var(--ink),
+      4px 4px 0 0 var(--shadow);
+  }
+  .subtitle{
+    margin:12px auto 0;
+    max-width: 720px;
+    opacity:.85;
+    line-height:1.4;
+    font-size: 14px;
+  }
+
+  /* 卡片网格 */
+  main{
+    max-width: 980px;
+    margin: 24px auto 48px;
+    padding: 0 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+  }
+
+  /* 像素卡片按钮 */
+  .card{
+    position:relative;
+    display:block;
+    text-decoration:none;
+    color:inherit;
+    background: var(--card);
+    padding: 16px;
+    min-height: 140px;
+    box-shadow:
+      0 0 0 2px var(--ink),
+      6px 6px 0 0 var(--shadow);
+    transition: transform .06s steps(2, end), box-shadow .06s steps(2, end);
+  }
+  .card:focus-visible{ outline: 2px solid var(--accent); outline-offset: 4px; }
+  .card:hover{ transform: translate(-2px, -2px); box-shadow: 0 0 0 2px var(--ink), 8px 8px 0 0 var(--shadow); }
+  .card:active{ transform: translate(2px,2px); box-shadow: 0 0 0 2px var(--ink), 4px 4px 0 0 var(--shadow); }
+
+  .row{
+    display:flex;
+    gap:12px;
+    align-items:center;
+  }
+  .icon{
+    width:48px; height:48px;
+    image-rendering: pixelated;
+    flex: 0 0 auto;
+  }
+  .label{
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin: 2px 0 6px;
+  }
+  .desc{
+    font-size: 13px;
+    opacity:.9;
+    line-height:1.3;
+  }
+  /* 小像素角标 */
+  .badge{
+    position:absolute;
+    top:10px; right:10px;
+    background: var(--accent-2);
+    color:#0b130d;
+    font-weight:700;
+    font-size:12px;
+    padding:4px 6px;
+    box-shadow: 0 0 0 2px var(--ink);
+  }
+
+  footer{
+    text-align:center;
+    font-size:12px;
+    opacity:.8;
+    margin-bottom:24px;
+  }
+</style>
 </head>
 <body>
   <header>
-    <h1>TEM Toolbox</h1>
-    <p>Your collection of Transmission Electron Microscopy utilities</p>
+    <div class="title">TEM Toolbox — Pixel Edition</div>
+    <div class="subtitle">A tiny 8-bit hub for your Transmission Electron Microscopy utilities. Click a tile to launch a tool.</div>
   </header>
 
   <main>
-    <a href="https://abigalelu.github.io/tem-test-fee/" class="card">
-      <h2>TEM Test Fee</h2>
-      <p>Quick calculator for TEM testing service costs</p>
+    <!-- 卡片 1：Test Fee（计算器图标） -->
+    <a class="card" href="https://abigalelu.github.io/tem-test-fee/">
+      <span class="badge">LIVE</span>
+      <div class="row">
+        <!-- 8-bit Calculator：用SVG方块拼出像素风计算器 -->
+        <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+          <!-- 外框 -->
+          <rect x="1" y="1" width="14" height="14" fill="#2c3e50" />
+          <rect x="2" y="2" width="12" height="12" fill="#f1f5ff" />
+          <!-- 屏幕 -->
+          <rect x="3" y="3" width="10" height="4" fill="#b7c7ff" />
+          <!-- 键盘（像素点） -->
+          <rect x="3" y="8" width="2" height="2" fill="#2c3e50"/>
+          <rect x="6" y="8" width="2" height="2" fill="#2c3e50"/>
+          <rect x="9" y="8" width="2" height="2" fill="#2c3e50"/>
+          <rect x="3" y="11" width="2" height="2" fill="#2c3e50"/>
+          <rect x="6" y="11" width="2" height="2" fill="#2c3e50"/>
+          <rect x="9" y="11" width="2" height="2" fill="#ff6b6b"/>
+        </svg>
+        <div>
+          <div class="label">TEM Test Fee</div>
+          <div class="desc">Quick fee calculator · pixel UI</div>
+        </div>
+      </div>
     </a>
 
-    <a href="https://abigalelu.github.io/tem-billing-hub/" class="card">
-      <h2>TEM Billing Hub</h2>
-      <p>Billing and quotation tool for TEM usage</p>
+    <!-- 卡片 2：Billing Hub（金币/💸图标） -->
+    <a class="card" href="https://abigalelu.github.io/tem-billing-hub/">
+      <span class="badge" style="background:var(--accent-3);color:#332100;">NEW</span>
+      <div class="row">
+        <!-- 8-bit Coins：三层像素金币 -->
+        <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+          <!-- 背币影 -->
+          <rect x="2" y="9" width="10" height="4" fill="#d29a00" />
+          <rect x="3" y="8" width="10" height="4" fill="#f8c63d" />
+          <!-- 前币 -->
+          <rect x="6" y="5" width="8" height="4" fill="#f8c63d" />
+          <rect x="5" y="6" width="8" height="4" fill="#ffd45a" />
+          <!-- 高光 -->
+          <rect x="6" y="6" width="2" height="1" fill="#fff3a6" />
+        </svg>
+        <div>
+          <div class="label">TEM Billing Hub</div>
+          <div class="desc">Quotations & billing · coin/💸 vibe</div>
+        </div>
+      </div>
     </a>
 
-    <a href="#" class="card">
-      <h2>Future Tool</h2>
-      <p>Coming soon...</p>
+    <!-- 占位卡：Future Tool -->
+    <a class="card" href="#">
+      <div class="row">
+        <!-- 8-bit 占位星星 -->
+        <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+          <rect x="7" y="1" width="2" height="4" fill="#8be28b"/>
+          <rect x="1" y="7" width="4" height="2" fill="#8be28b"/>
+          <rect x="11" y="7" width="4" height="2" fill="#8be28b"/>
+          <rect x="7" y="11" width="2" height="4" fill="#8be28b"/>
+          <rect x="5" y="5" width="6" height="6" fill="#c7ffd1"/>
+        </svg>
+        <div>
+          <div class="label">Future Tool</div>
+          <div class="desc">Coming soon · add your next utility here</div>
+        </div>
+      </div>
     </a>
   </main>
 
-  <footer>
-    © 2025 Abigale · TEM Toolbox
-  </footer>
+  <footer>© 2025 Abigale · TEM Toolbox (Pixel Edition)</footer>
 </body>
 </html>
